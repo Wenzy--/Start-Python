@@ -1,0 +1,54 @@
+#coding=utf-8
+#应用不同进行读写规则进行写入
+
+import os
+
+fin=open('word.txt','w')
+
+name='tom'
+age=24
+height=1.88
+
+fin.write('userfile:%s,age:%d,height:%g'%(name,age,height))
+
+cwd=os.getcwd()
+#获取当前路径
+path=os.path.abspath('word.txt')
+fin.write(path)
+fin.write('\n'+cwd)
+
+#将文件夹的当前路径与文件的绝对路径写入txt
+
+exists=os.path.exists('word.txt')
+#判断文件是否存在
+fin.write('\n'+str(exists))
+
+fin.write(str(os.path.isdir('/Users/wenzy/Documents/practice')))
+#判断是否为当前文件夹，返回bool
+
+
+fin.write(str(os.listdir(cwd)))
+#返回指定目录所有文件名或目录的列表
+
+
+def walk(dirname):
+    for name in dirname:
+        path=os.path.join(dirname,name)
+        if os.path.isfile(path):
+            print path
+        else:
+            walk(dirname)
+
+
+
+#走遍一个目录，并打印内容
+
+
+fin.close()
+
+
+
+
+
+
+
