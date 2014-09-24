@@ -1,0 +1,44 @@
+#coding=utf-8
+#计算四位数乘四位数，判断正确率以及反应时
+
+import random
+import datetime
+
+output=open('calculate_speed_data.txt','a')
+
+
+
+while True:
+    a=random.randint(1000,9999)
+    b=random.randint(1000,9999)
+    time1=datetime.datetime.now()
+
+
+    print ("%d*%d= ?"%(a,b))
+
+    answer=raw_input("input your number:")
+    
+    
+    try:
+        if int(answer)==a*b:
+            bool=True
+        else:
+            bool=False
+
+
+    except:
+        bool=False
+
+    print ("%r"%bool)
+
+    time2=datetime.datetime.now()
+
+    cost=(time2-time1).seconds
+
+    print ("Your time %r"%cost)
+    output.write("subject: %d * %d:   your answer:%r   correct answer:%d  bool:%r  time:%r "%(a,b,answer,a*b,bool,cost))
+    output.write('\n')
+    raw_input("next?")
+
+output.close()
+
