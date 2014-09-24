@@ -1,0 +1,28 @@
+#coding=utf-8
+import string
+
+def sed(word1,word2,txt1,txt2):
+    fin1=open('%s.txt'%txt1,'r')
+    fin2=open('%s.txt'%txt2,'w')
+    txt=''
+    for i in fin1:
+        txt+=i
+    p=string.punctuation
+    for i in p:
+        txt=txt.replace(i,'\n')
+    list1=txt.split()
+    for i in range(len(list1)):
+        if list1[i]==word1:
+            list1[i]=word2
+
+
+    fin2.write(str(list1))
+    fin1.close()
+    fin2.close()
+
+
+sed('a','b','testA','testB')
+
+
+#标准答案：http://www.greenteapress.com/thinkpython/code/walk.py
+
