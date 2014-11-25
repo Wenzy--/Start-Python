@@ -1,0 +1,213 @@
+from sys import argv
+script=argv
+import pygame
+from pygame.locals import *
+from sys import exit
+from random import*
+import datetime
+import time
+from math import sqrt
+ 
+pygame.init()
+screen= pygame.display.set_mode((1000, 1000), 0, 32)
+screen.fill((41,41,41))
+output=open('data.txt','a') 
+factor=0.
+clock=pygame.time.Clock()
+
+show_tri=[]
+new_tri=[]
+try_tri=[]
+list_acc=[]
+count=0
+
+
+def sequence(x):
+
+    
+    list1=[0,1,2,3]
+    list2=[]
+    for i in range(x):
+        if i%4==0:
+            list1=[0,1,2,3]
+        num=choice(list1)
+        list2.append(num)
+        list1.remove(num)
+    return list2
+        
+def show_point1(list):
+    x=0
+    y=0
+    list1=[]
+    for i in list:
+        if i==0:
+            x=randint(100,450)
+            y=randint(100,450)
+        elif i==1:
+            x=randint(450,900)
+            y=randint(100,450)
+        elif i==2:
+            x=randint(450,900)
+            y=randint(450,900)
+        elif i==3:
+            x=randint(100,450)
+            y=randint(450,900)
+        elif i>3:
+            i=i-4
+        list1.append((x,y))
+    return list1
+
+
+def r_point():
+    global count
+    x=randint(100,900)
+    y=randint(100,900)
+    return (x,y)
+
+
+
+
+def show_point3(a):
+    list=[]
+    for i in range(a):
+        (x,y)=r_point()
+        list.append((x,y))
+    return list
+
+def sum_point(list):
+    total_x=0
+    total_y=0
+    
+    for i in range(len(list)):
+        total_x+=list[i-1][0]
+        total_y+=list[i-1][1]
+    return total_x,total_y
+        
+
+
+def multipl(a,b):
+    sumofab=0.0
+    for i in range(len(a)):
+        temp=a[i]*b[i]
+        sumofab+=temp
+    return sumofab
+
+def change(list1):
+    list2=[]
+    for i in range(len(list1)):
+        for j in range(len(list1[i])):
+            list2.append(list1[i][j])
+    return list2
+
+
+def pearson(x,y):
+    N=len(x)
+    sumofx=sum(x)
+    sumofy=sum(y)
+    sumofxy=multipl(x,y)
+    sumofxx=multipl(x,x)
+    sumofyy=multipl(y,y)
+    upside=sumofxy-sumofx*sumofy/N
+    downside=sqrt((sumofxx-float(sumofx**2)/N)*(sumofyy-float(sumofy**2)/N))  
+    return upside/downside
+
+while True:
+    
+    
+    for event in pygame.event.get():
+
+        time_passed=clock.tick(10)
+        
+        if event.type == QUIT:
+            
+            output.write("----------------------------------------------------------")
+            output.close()
+            exit()
+
+        elif event.type==KEYDOWN:
+            if event.key==K_DOWN:
+                screen.fill((41,41,41))
+                try_tri=[]
+                
+            elif event.key==K_UP:
+                if count<=10:
+                    count=count+1
+                    font1=pygame.font.SysFont("simon",50)
+                    text1=font1.render("Test:%s"%count,1,(50,240,90))
+                    screen.blit(text1,(450,20))
+                    show_tri=[]
+                    list_x=sequence(4)
+                    show_tri=show_point1(list_x)
+                    pygame.draw.polygon(screen,(74,138,240),show_tri,2)
+                    print show_tri
+
+ 
+
+                    counti=0
+                    for i in show_tri:
+                        counti+=1
+                        pygame.draw.circle(screen,(74,138,240),i,5)
+                        textnumber=font1.render(str(counti),1,(50,240,90))
+                        screen.blit(textnumber,i)
+                        
+                    output.write('random coordinates:'+str(show_tri))
+                    output.write(str(datetime.datetime.now())+'\n')
+                else:
+                    count=0
+                    
+                    
+                
+            elif event.key==K_LEFT:
+                try:
+                    
+                    if count==10:
+                    
+                        ave=sum(list_acc)/10.
+                        text2=font.render("average:%s"%ave,1,(50,240,90))
+                        font2=pygame.font.SysFont("simon",200)
+                        text3=font2.render("FINISH",1,(50,240,90))
+                        screen.blit(text2,(300,950))
+                        screen.blit(text3,(350,450))
+ 
+                    
+                    for i in show_tri:
+                        pygame.draw.circle(screen,(100,100,100),i,5)
+                    for i in try_tri:
+                        pygame.draw.circle(screen,(50,240,90),i,5)
+                                           
+                    output.write('Your coordinates:'+str(try_tri))
+                    output.write(str(datetime.datetime.now())+'\n')
+ 
+
+                    list_a=change(show_tri)
+                    list_b=change(try_tri)
+                    acc=pearson(list_a,list_b)
+                    print acc
+                    pygame.draw.polygon(screen,(50,240,90),try_tri,2)
+
+                    try_tri=[]
+                    
+                    font=pygame.font.SysFont("simon",50)
+                    text=font.render("Accurate is:%s"%acc,1,(50,240,90))
+                    
+                    output.write("Accurate is:%s"%acc)
+                    screen.blit(text,(300,900))
+                    list_acc.append(acc**3)
+
+                    if count==10:
+                        output.write("\n ave:%s\n"%ave)
+                        list_acc=[]
+                        count=0
+                    
+                except:
+                    pass
+        elif event.type==MOUSEBUTTONDOWN:
+            x,y=pygame.mouse.get_pos()
+            pygame.draw.circle(screen,(50,240,90),(x,y),5)
+            try_tri.append((x,y))
+
+    pygame.display.update()
+    
+
+   
+    
